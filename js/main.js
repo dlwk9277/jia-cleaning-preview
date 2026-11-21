@@ -38,7 +38,13 @@
     if (focus) tab.focus();
   };
   tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => show(tab));
+    tab.addEventListener('click', () => {
+      show(tab);
+      // If the tab bar is stuck to the top, bring the new list's start into view
+      const bar = tab.parentElement.getBoundingClientRect();
+      const panel = document.getElementById(tab.getAttribute('aria-controls'));
+      if (bar.top < 90 && panel.getBoundingClientRect().top < bar.bottom) panel.scrollIntoView({ block: 'start' });
+    });
     tab.addEventListener('keydown', e => {
       const n = tabs.length;
       const k = { ArrowRight: i + 1, ArrowLeft: i - 1 + n, Home: 0, End: n - 1 }[e.key];
